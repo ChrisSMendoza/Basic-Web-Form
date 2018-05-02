@@ -53,7 +53,7 @@
         <label class="col-sm-2 col-form-label">Password</label>
         <div class="col-sm-6">
           <input type="email" class="form-control" id="" placeholder="" 
-                  v-model="password" v-on:keyup.enter="checkInput"
+                  v-model="password" v-on:keyup.enter="checkInput" v-on:keyup="isValidPassword()"
           >
         </div>
 
@@ -84,6 +84,10 @@
      methods: {
 
         isValidPassword() {
+
+          this.hasNumber = false;
+          this.hasCapital = false;
+          this.numLowerCase = 0;
 
           // password must include one capital letter, 8 or more lower case letters, and at least one number
           for(let i = 0; i < this.password.length; i++) {
