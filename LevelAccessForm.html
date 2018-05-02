@@ -20,13 +20,33 @@
     
   <div id="app">
 
-    <form method="get">
+    <form id="app">
+
+      <p>{{message}}</p>
+
+      <div class="m-10">
+        <h5>Password requires: </h5>
+        <span class="badge" :class="{'badge-primary': hasCapital}">one upper case</span>
+        <span class="badge" :class="{'badge-primary': enoughLower}">8 or more lower case</span>
+        <span class="badge badge-success">one number</span>
+      </div>  
 
       <div class="form-group row">
-        <label for="" class="col-sm-2 col-form-label">User Name</label>
+
+        <label class="col-sm-2 col-form-label">User Name</label>
         <div class="col-sm">
-          <input type="email" class="form-control" id="" placeholder="" v-model="username">
+          <input type="email" class="form-control" id="" placeholder="" 
+                  v-model="userName" v-on:keyup.enter="checkInput"
+          >
         </div>
+
+        <label class="col-sm-2 col-form-label">Password</label>
+        <div class="col-sm">
+          <input type="email" class="form-control" id="" placeholder="" 
+                  v-model="password" v-on:keyup.enter="checkInput"
+          >
+        </div>
+
       </div>
 
     </form>
@@ -38,11 +58,67 @@
 
     var form = new Vue({
 
-
       el: '#app',
+      
       data: {
-        username: ""
+        password: "",
+
+        userName: "",
+
+        hasCapital: false,
+        numLowerCase: 0,
+        hasNumber: false,
+
+        message:"no input"
+      },
+
+     methods: {
+
+        isValidPassword() {
+
+          // password must include one capital letter, one lower case letter, and at least one number
+          for(let i = 0; i < this.password.length; i++) {
+
+              if(NaN !== Number(this.password[i])) { //check correctly
+                this.hasNumber = true;
+              }
+
+              if(this.password[i] === this.password[i].toUpperCase()) {
+                this.hasCapital = true;
+              }
+
+              if(this.password[i] === this.password[i].toLowerCase()) {
+                this.numLowerCase++;
+              }
+
+
+          }
+
+          return this.hasCapital && this.hasNumber && (this.numLowerCase > 7)
+        },
+
+        checkInput: function () {
+          
+          //password met requirements
+          if(this.isValidPassword()) {
+
+            this.message = `You're all signed up ${this.userName}`;
+          }
+          else 
+            this.message = `somethings wrong..`;
+
+        }
+      },
+
+      computed: {
+
+        enoughLower() {
+
+          return this.numLowerCase > 7;
+        }
+
       }
+
     })
 
   </script>
