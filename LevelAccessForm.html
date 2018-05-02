@@ -24,11 +24,17 @@
 
       <p>{{message}}</p>
 
-      <div class="m-10">
+      <div class="">
+
         <h5>Password requires: </h5>
-        <span class="badge" :class="{'badge-primary': hasCapital}">one upper case</span>
-        <span class="badge" :class="{'badge-primary': enoughLower}">8 or more lower case</span>
-        <span class="badge badge-success">one number</span>
+        <span class="badge" 
+              :class="{'badge-success': hasCapital, 'badge-danger': !hasCapital}">One upper case</span>
+
+        <span class="badge" 
+              :class="{'badge-success': hasNumber, 'badge-danger': !hasNumber}">One number</span>
+
+        <span class="badge" 
+              :class="{'badge-success': enoughLower, 'badge-danger': !enoughLower}">8 or more lower case</span>
       </div>  
 
       <div class="form-group row">
@@ -62,7 +68,6 @@
       
       data: {
         password: "",
-
         userName: "",
 
         hasCapital: false,
@@ -79,19 +84,19 @@
           // password must include one capital letter, one lower case letter, and at least one number
           for(let i = 0; i < this.password.length; i++) {
 
-              if(NaN !== Number(this.password[i])) { //check correctly
+              let letterAscii = this.password[i].charCodeAt();
+
+              if("0".charCodeAt() <= letterAscii && letterAscii <= "9".charCodeAt()) {
                 this.hasNumber = true;
               }
 
-              if(this.password[i] === this.password[i].toUpperCase()) {
+              else if("A".charCodeAt() <= letterAscii && letterAscii <= "Z".charCodeAt()) {
                 this.hasCapital = true;
               }
 
-              if(this.password[i] === this.password[i].toLowerCase()) {
+              else if("a".charCodeAt() <= letterAscii && letterAscii <= "z".charCodeAt()) {
                 this.numLowerCase++;
               }
-
-
           }
 
           return this.hasCapital && this.hasNumber && (this.numLowerCase > 7)
