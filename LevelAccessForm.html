@@ -24,30 +24,34 @@
 
       <p>{{message}}</p>
 
-      <div class="">
+      <div class="m-4">
 
         <h5>Password requires: </h5>
-        <span class="badge" 
+        <span class="badge badge-pill" 
               :class="{'badge-success': hasCapital, 'badge-danger': !hasCapital}">One upper case</span>
 
-        <span class="badge" 
+        <span class="badge badge-pill" 
               :class="{'badge-success': hasNumber, 'badge-danger': !hasNumber}">One number</span>
 
-        <span class="badge" 
+        <span class="badge badge-pill" 
               :class="{'badge-success': enoughLower, 'badge-danger': !enoughLower}">8 or more lower case</span>
       </div>  
 
       <div class="form-group row">
 
         <label class="col-sm-2 col-form-label">User Name</label>
-        <div class="col-sm">
+        <div class="col-sm-6">
           <input type="email" class="form-control" id="" placeholder="" 
                   v-model="userName" v-on:keyup.enter="checkInput"
           >
         </div>
 
+      </div>
+
+      <div class="form-group row">
+
         <label class="col-sm-2 col-form-label">Password</label>
-        <div class="col-sm">
+        <div class="col-sm-6">
           <input type="email" class="form-control" id="" placeholder="" 
                   v-model="password" v-on:keyup.enter="checkInput"
           >
@@ -81,7 +85,7 @@
 
         isValidPassword() {
 
-          // password must include one capital letter, one lower case letter, and at least one number
+          // password must include one capital letter, 8 or more lower case letters, and at least one number
           for(let i = 0; i < this.password.length; i++) {
 
               let letterAscii = this.password[i].charCodeAt();
