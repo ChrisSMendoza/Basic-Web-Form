@@ -24,7 +24,7 @@
 
       <p>{{message}}</p>
 
-      <div class="m-4">
+      <div class="mb-4">
 
         <h5>Password requires: </h5>
         <span class="badge badge-pill" 
@@ -78,13 +78,19 @@
         numLowerCase: 0,
         hasNumber: false,
 
-        message:"no input"
+        message:"no input",
+
+        userDatabase: {
+          // username is property, password is value 
+          Level: "Access123"
+        }
+
       },
 
      methods: {
 
         isValidPassword() {
-
+          //called on keyup
           this.hasNumber = false;
           this.hasCapital = false;
           this.numLowerCase = 0;
@@ -112,6 +118,16 @@
 
         checkInput: function () {
           
+          if(this.userExists(this.userName)) {
+
+            // does database stored password match the current form password
+            if(this.userDatabase[this.userName] === this.password) {
+
+              //REDIRECT TO DO 
+              console.log("Youre all logged in");
+            }
+          }
+
           //password met requirements
           if(this.isValidPassword()) {
 
@@ -120,6 +136,11 @@
           else 
             this.message = `somethings wrong..`;
 
+        },
+
+        userExists(username) {
+
+          return this.userDatabase.hasOwnProperty(username);
         }
       },
 
