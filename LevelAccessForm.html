@@ -20,8 +20,8 @@
     
     <div class="row align-items-center justify-content-center">
       <div class="col-8">
-
-        <form id="app" class="mt-5">
+        <!-- stop browser from implicit submission -->
+        <form id="app" class="mt-5" v-on:submit.prevent> 
 
           <div id="passwordRequirements" class="mb-4">
 
@@ -51,8 +51,8 @@
 
             <label class="col-sm-2 col-form-label">User Name</label>
             <div class="col-sm">
-              <input type="email" class="form-control" id="" placeholder="" 
-                      v-model="userName" v-on:keyup.enter="checkInput"
+              <input type="text" class="form-control"
+                      v-model="userName" v-on:keyup.enter="checkInput()"
               >
             </div>
 
@@ -61,14 +61,17 @@
 
             <label class="col-sm-2 col-form-label">Password</label>
             <div class="col-sm">
-              <input type="email" class="form-control" id="" placeholder="" 
-                      v-model="password" v-on:keyup.enter="checkInput" v-on:keyup="validatePassword()"
+              <input type="text" class="form-control" v-model="password" 
+                      v-on:keyup.enter="checkInput()" v-on:keyup="validatePassword()"
               >
             </div>
 
           </div>
 
-          <div v-if="message != '' " div class="alert" :class="messageColor" role="alert">
+          <button v-on:click="checkInput()" class="btn btn-primary" type="submit">Submit</button>
+
+          <!-- message is displayed once the user submits -->
+          <div v-if="message != '' " class="alert mt-2" :class="messageColor" role="alert">
             {{message}}
           </div>
 
