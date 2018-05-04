@@ -20,22 +20,24 @@
     
   <div id="app">
 
-    <form id="app">
+    <form id="">
 
       <p>{{message}}</p>
 
       <div class="mb-4">
 
-        <h5>Password requires: </h5>
-        <span class="badge badge-pill" 
-              :class="{'badge-success': hasCapital, 'badge-danger': !hasCapital}">One upper case</span>
+        <h5>Password requires: 
+          <span class="badge badge-pill" 
+                :class="{'badge-success': hasCapital, 'badge-danger': !hasCapital}">One upper case</span>
 
-        <span class="badge badge-pill" 
-              :class="{'badge-success': hasNumber, 'badge-danger': !hasNumber}">One number</span>
+          <span class="badge badge-pill" 
+                :class="{'badge-success': hasNumber, 'badge-danger': !hasNumber}">One number</span>
 
-        <span class="badge badge-pill" 
-              :class="{'badge-success': enoughLower, 'badge-danger': !enoughLower}">8 or more lower case</span>
+          <span class="badge badge-pill" 
+                :class="{'badge-success': enoughLower, 'badge-danger': !enoughLower}">{{numLowerRequired}} or more lower case</span>
+        </h5>
       </div>  
+
 
       <div class="form-group row">
 
@@ -75,12 +77,14 @@
         userName: "",
 
         hasCapital: false,
-        numLowerCase: 0,
         hasNumber: false,
+        numLowerCase: 0,
+        numLowerRequired: 6,
 
         message:"no input",
 
         userDatabase: {
+
           // username is property, password is value 
           Level: "Access123"
         }
@@ -88,14 +92,14 @@
       },
 
      methods: {
-
+        //called on keyup
         isValidPassword() {
-          //called on keyup
+          
           this.hasNumber = false;
           this.hasCapital = false;
           this.numLowerCase = 0;
 
-          // password must include one capital letter, 8 or more lower case letters, and at least one number
+          // password must include one capital letter, 6 or more lower case letters, and at least one number
           for(let i = 0; i < this.password.length; i++) {
 
               let letterAscii = this.password[i].charCodeAt();
@@ -113,7 +117,7 @@
               }
           }
 
-          return this.hasCapital && this.hasNumber && (this.numLowerCase > 7)
+          return this.hasCapital && this.hasNumber && (this.numLowerCase >= this.numLowerRequired)
         },
 
         checkInput: function () {
@@ -124,8 +128,10 @@
             if(this.userDatabase[this.userName] === this.password) {
 
               //REDIRECT TO DO 
-              console.log("Youre all logged in");
+              console.log("Youre all logged in.");
             }
+            else 
+              console.log("Try again.")
           }
 
           //password met requirements
@@ -148,7 +154,7 @@
 
         enoughLower() {
 
-          return this.numLowerCase > 7;
+          return this.numLowerCase >= this.numLowerRequired;
         }
 
       }
