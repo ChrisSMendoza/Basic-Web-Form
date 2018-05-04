@@ -18,150 +18,169 @@
 
   <body class="container">
     
-  <div id="app">
+    <div class="row align-items-center justify-content-center">
+      <div class="col-8">
 
-    <form id="">
+        <form id="app" class="mt-5">
 
-      <p>{{message}}</p>
+          <div id="passwordRequirements" class="mb-4">
 
-      <div class="mb-4">
+            <h4>Password requires:<br> <!-- badges take size of the header -->
 
-        <h5>Password requires: 
-          <span class="badge badge-pill" 
-                :class="{'badge-success': hasCapital, 'badge-danger': !hasCapital}">One upper case</span>
+              <!-- badge color depends on password status -->
+              <span class="badge badge-pill" 
+                    :class="{'badge-success': hasCapital, 'badge-danger': !hasCapital}">
+                One upper case
+              </span>
 
-          <span class="badge badge-pill" 
-                :class="{'badge-success': hasNumber, 'badge-danger': !hasNumber}">One number</span>
+              <span class="badge badge-pill" 
+                    :class="{'badge-success': hasNumber, 'badge-danger': !hasNumber}">
+                One number
+              </span>
 
-          <span class="badge badge-pill" 
-                :class="{'badge-success': enoughLower, 'badge-danger': !enoughLower}">{{numLowerRequired}} or more lower case</span>
-        </h5>
-      </div>  
+              <span class="badge badge-pill" 
+                    :class="{'badge-success': enoughLower, 'badge-danger': !enoughLower}">
+                  {{numLowerRequired}} or more lower case
+              </span>
 
+            </h4>
 
-      <div class="form-group row">
+          </div>  
 
-        <label class="col-sm-2 col-form-label">User Name</label>
-        <div class="col-sm-6">
-          <input type="email" class="form-control" id="" placeholder="" 
-                  v-model="userName" v-on:keyup.enter="checkInput"
-          >
-        </div>
+          <div class="form-group row">
 
+            <label class="col-sm-2 col-form-label">User Name</label>
+            <div class="col-sm">
+              <input type="email" class="form-control" id="" placeholder="" 
+                      v-model="userName" v-on:keyup.enter="checkInput"
+              >
+            </div>
+
+          </div>
+          <div class="form-group row">
+
+            <label class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm">
+              <input type="email" class="form-control" id="" placeholder="" 
+                      v-model="password" v-on:keyup.enter="checkInput" v-on:keyup="isValidPassword()"
+              >
+            </div>
+
+          </div>
+
+          <div v-if="message != '' " div class="alert" :class="messageColor" role="alert">
+            {{message}}
+          </div>
+
+        </form>
       </div>
+    </div>
 
-      <div class="form-group row">
+    <script>
 
-        <label class="col-sm-2 col-form-label">Password</label>
-        <div class="col-sm-6">
-          <input type="email" class="form-control" id="" placeholder="" 
-                  v-model="password" v-on:keyup.enter="checkInput" v-on:keyup="isValidPassword()"
-          >
-        </div>
+      var form = new Vue({
 
-      </div>
+        el: '#app',
+        
+        data: {
+          password: "",
+          userName: "",
 
-    </form>
+          hasCapital: false,
+          hasNumber: false,
+          numLowerCase: 0,
+          numLowerRequired: 5,
 
-  </div>
+          message:"",
+          messageColor: "alert-primary",
 
+          userDatabase: {
 
-  <script>
-
-    var form = new Vue({
-
-      el: '#app',
-      
-      data: {
-        password: "",
-        userName: "",
-
-        hasCapital: false,
-        hasNumber: false,
-        numLowerCase: 0,
-        numLowerRequired: 6,
-
-        message:"no input",
-
-        userDatabase: {
-
-          // username is property, password is value 
-          Level: "Access123"
-        }
-
-      },
-
-     methods: {
-        //called on keyup
-        isValidPassword() {
-          
-          this.hasNumber = false;
-          this.hasCapital = false;
-          this.numLowerCase = 0;
-
-          // password must include one capital letter, 6 or more lower case letters, and at least one number
-          for(let i = 0; i < this.password.length; i++) {
-
-              let letterAscii = this.password[i].charCodeAt();
-
-              if("0".charCodeAt() <= letterAscii && letterAscii <= "9".charCodeAt()) {
-                this.hasNumber = true;
-              }
-
-              else if("A".charCodeAt() <= letterAscii && letterAscii <= "Z".charCodeAt()) {
-                this.hasCapital = true;
-              }
-
-              else if("a".charCodeAt() <= letterAscii && letterAscii <= "z".charCodeAt()) {
-                this.numLowerCase++;
-              }
+            // username is property, password is value 
+            Level: "Access123"
           }
 
-          return this.hasCapital && this.hasNumber && (this.numLowerCase >= this.numLowerRequired)
         },
 
-        checkInput: function () {
-          
-          if(this.userExists(this.userName)) {
+       methods: {
+          //called on keyup
+          isValidPassword() {
+            
+            this.hasNumber = false;
+            this.hasCapital = false;
+            this.numLowerCase = 0;
 
-            // does database stored password match the current form password
-            if(this.userDatabase[this.userName] === this.password) {
+            //password needs 1 number, 1 capital letter, and 5 or more lowercase letters
+            for(let i = 0; i < this.password.length; i++) {
 
-              //REDIRECT TO DO 
-              console.log("Youre all logged in.");
+                let letterAscii = this.password[i].charCodeAt();
+
+                if("0".charCodeAt() <= letterAscii && letterAscii <= "9".charCodeAt()) {
+                  this.hasNumber = true;
+                }
+
+                else if("A".charCodeAt() <= letterAscii && letterAscii <= "Z".charCodeAt()) {
+                  this.hasCapital = true;
+                }
+
+                else if("a".charCodeAt() <= letterAscii && letterAscii <= "z".charCodeAt()) {
+                  this.numLowerCase++;
+                }
             }
-            else 
-              console.log("Try again.")
+            //SEPARATE INTO TWO FUNCTIONS
+            //validate() does above check on keyup
+            //isValid() returns a bool, for checkInput()
+            return this.hasCapital && this.hasNumber && (this.numLowerCase >= this.numLowerRequired)
+          },
+
+          checkInput: function () {
+            
+            if(this.userExists(this.userName)) {
+
+              // database stored password matches the current form password
+              if(this.userDatabase[this.userName] === this.password) {
+
+                //REDIRECT
+                //HANDLE EACH CASE WITH MESSAGE AND MATCHING COLOR 
+                this.message = "You're all logged in.";
+                this.messageColor = "alert-success";
+              }
+              else {
+                this.message = "That username and password combination was not recogized.";
+                this.messageColor = "alert-danger";
+              }
+            }
+
+            //password met requirements
+            if(this.isValidPassword()) {
+
+              // this.message = `You're all signed up ${this.userName}`;
+            }
+            else {
+              this.message = this.message;
+              // this.message = `somethings wrong..`;
+            }
+
+          },
+
+          userExists(username) {
+
+            return this.userDatabase.hasOwnProperty(username);
           }
-
-          //password met requirements
-          if(this.isValidPassword()) {
-
-            this.message = `You're all signed up ${this.userName}`;
-          }
-          else 
-            this.message = `somethings wrong..`;
-
         },
 
-        userExists(username) {
+        computed: {
 
-          return this.userDatabase.hasOwnProperty(username);
-        }
-      },
+          enoughLower() {
 
-      computed: {
+            return this.numLowerCase >= this.numLowerRequired;
+          }
 
-        enoughLower() {
-
-          return this.numLowerCase >= this.numLowerRequired;
         }
 
-      }
+      })
 
-    })
-
-  </script>
+    </script>
 
 
 
