@@ -62,7 +62,7 @@
             <label class="col-sm-2 col-form-label">Password</label>
             <div class="col-sm">
               <input type="email" class="form-control" id="" placeholder="" 
-                      v-model="password" v-on:keyup.enter="checkInput" v-on:keyup="isValidPassword()"
+                      v-model="password" v-on:keyup.enter="checkInput" v-on:keyup="validatePassword()"
               >
             </div>
 
@@ -104,7 +104,7 @@
 
        methods: {
           //called on keyup
-          isValidPassword() {
+          validatePassword() {
             
             this.hasNumber = false;
             this.hasCapital = false;
@@ -127,9 +127,9 @@
                   this.numLowerCase++;
                 }
             }
-            //SEPARATE INTO TWO FUNCTIONS
-            //validate() does above check on keyup
-            //isValid() returns a bool, for checkInput()
+          },
+
+          isValidPassword() {
             return this.hasCapital && this.hasNumber && (this.numLowerCase >= this.numLowerRequired)
           },
 
