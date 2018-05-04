@@ -137,28 +137,29 @@
             
             if(this.userExists(this.userName)) {
 
-              // database stored password matches the current form password
+              // successful login
               if(this.userDatabase[this.userName] === this.password) {
 
-                //REDIRECT
-                //HANDLE EACH CASE WITH MESSAGE AND MATCHING COLOR 
-                this.message = "You're all logged in.";
+                this.message = "You're all logged in."; //change alert accordingly
                 this.messageColor = "alert-success";
+                window.location.href = "loggedInPage.html"; //go to new page
               }
+              //password didn't match the one in the 'database'
               else {
                 this.message = "That username and password combination was not recogized.";
                 this.messageColor = "alert-danger";
               }
             }
 
-            //password met requirements
-            if(this.isValidPassword()) {
+            //user does not exist; the password meets the criteria
+            else if(this.isValidPassword()) {
 
-              // this.message = `You're all signed up ${this.userName}`;
+              this.message = `Your account has been registered ${this.userName}`;
+              this.messageColor = "alert-success";
             }
             else {
-              this.message = this.message;
-              // this.message = `somethings wrong..`;
+              this.message = "Your password does not meet the requirements.";
+              this.messageColor = "alert-danger";
             }
 
           },
