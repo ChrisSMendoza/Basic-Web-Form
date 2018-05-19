@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Interactive Login Form</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  </head>
+
+
+  <body class="container">
+    
+    <div class="row align-items-center justify-content-center">
+      <div class="col-8">
+        <!-- stop browser from implicit submission -->
+        <form id="app" class="mt-5" v-on:submit.prevent> 
+
+          <div id="passwordRequirements" class="mb-4">
+
+            <h4>Password requires:<br> <!-- badges take size of the header -->
+
+              <!-- badge color depends on password status -->
+              <span class="badge badge-pill" 
+                    :class="{'badge-success': hasCapital, 'badge-danger': !hasCapital}">
+                One upper case
+              </span>
+
+              <span class="badge badge-pill" 
+                    :class="{'badge-success': hasNumber, 'badge-danger': !hasNumber}">
+                One number
+              </span>
+
+              <span class="badge badge-pill" 
+                    :class="{'badge-success': enoughLower, 'badge-danger': !enoughLower}">
+                  {{numLowerRequired}} or more lower case
+              </span>
+
+            </h4>
+
+          </div>  
+
+          <div class="form-group row">
+
+            <label class="col-sm-2 col-form-label">Username</label>
+            <div class="col-sm">
+              <input type="text" class="form-control"
+                      v-model="username" v-on:keyup.enter="checkInput()"
+              >
+            </div>
+
+          </div>
+          <div class="form-group row">
+
+            <label class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm">
+              <input type="text" class="form-control" v-model="password" 
+                      v-on:keyup.enter="checkInput()" v-on:keyup="validatePassword()"
+              >
+            </div>
+
+          </div>
+
+          <button v-on:click="checkInput()" class="btn btn-primary" type="submit">Submit</button>
+
+          <!-- alert message is displayed once the user submits -->
+          <div v-if="message != '' " class="alert mt-2" :class="messageColor" role="alert">
+            {{message}}
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <script>
+
+      var form = new Vue({
+
+        el: '#app',
+        
+        data: {
+          password: "",
+          username: "",
+
+          hasCapital: false,
+          hasNumber: false,
+          numLowerCase: 0,
+          numLowerRequired: 5,
+
+          message:"",
+          messageColor: "alert-primary",
+
+          // for demo purposes
+          userDatabase: {
+
+            // username is property, password is value 
+            Chris: "HireMePlease123"
+          }
+
+        },
+
+       methods: {
+          //called on keyup
+          validatePassword() {
+            
+            this.hasNumber = false;
+            this.hasCapital = false;
+            this.numLowerCase = 0;
+
+            //password needs 1 number, 1 capital letter, and 5 or more lowercase letters
+            for(let i = 0; i < this.password.length; i++) {
+
+                let letterAscii = this.password[i].charCodeAt();
+
+                if("0".charCodeAt() <= letterAscii && letterAscii <= "9".charCodeAt()) {
+                  this.hasNumber = true;
+                }
+
+                else if("A".charCodeAt() <= letterAscii && letterAscii <= "Z".charCodeAt()) {
+                  this.hasCapital = true;
+                }
+
+                else if("a".charCodeAt() <= letterAscii && letterAscii <= "z".charCodeAt()) {
+                  this.numLowerCase++;
+                }
+            }
+          },
+          //called when enter key is pressed or submit button is clicked
+          isValidPassword() {
+            return this.hasCapital && this.hasNumber && (this.numLowerCase >= this.numLowerRequired)
+          },
+          
+          checkInput: function () {
+            
+            if(this.userExists(this.username)) {
+
+              // successful login
+              if(this.userDatabase[this.username] === this.password) {
+
+                this.message = "You're all logged in."; //change alert accordingly
+                this.messageColor = "alert-success";
+                window.location.href = "loggedInPage.html"; //go to new page
+              }
+              //password didn't match the one in the 'database'
+              else {
+                this.message = "That username and password combination was not recogized.";
+                this.messageColor = "alert-danger";
+              }
+            }
+
+            //user does not exist; the password meets the criteria
+            else if(this.isValidPassword()) {
+
+              this.message = `Your account has been registered ${this.username}`;
+              this.messageColor = "alert-success";
+            }
+            else {
+              this.message = "Your password does not meet the requirements.";
+              this.messageColor = "alert-danger";
+            }
+
+          },
+
+          userExists(username) {
+
+            return this.userDatabase.hasOwnProperty(username);
+          }
+        },
+
+        computed: {
+
+          enoughLower() {
+
+            return this.numLowerCase >= this.numLowerRequired;
+          }
+
+        }
+
+      })
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+    <!-- Bootstrap, Vue -->
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  </body>
+</html>
