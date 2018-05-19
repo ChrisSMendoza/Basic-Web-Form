@@ -9,8 +9,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" type="text/css" href="./LevelAccessForm.css">
-
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
   </head>
@@ -70,7 +68,7 @@
 
           <button v-on:click="checkInput()" class="btn btn-primary" type="submit">Submit</button>
 
-          <!-- message is displayed once the user submits -->
+          <!-- alert message is displayed once the user submits -->
           <div v-if="message != '' " class="alert mt-2" :class="messageColor" role="alert">
             {{message}}
           </div>
@@ -97,10 +95,11 @@
           message:"",
           messageColor: "alert-primary",
 
+          // for demo purposes
           userDatabase: {
 
             // username is property, password is value 
-            Level: "Access123"
+            Chris: "HireMePlease123"
           }
 
         },
@@ -131,11 +130,11 @@
                 }
             }
           },
-
+          //called when enter key is pressed or submit button is clicked
           isValidPassword() {
             return this.hasCapital && this.hasNumber && (this.numLowerCase >= this.numLowerRequired)
           },
-
+          
           checkInput: function () {
             
             if(this.userExists(this.userName)) {
